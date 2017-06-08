@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+#
+# Command-line rendering of Liquid templates
+#
+# Usage:
+# 	liquidize data.yml template.md
+
+require 'optparse'
+require 'yaml'
+require 'liquid'
+
+usage = "Usage: liquidize data.yml template.md"
+
+# Bare bones OptionParser, just show usage
+OptionParser.new do |opts|
+	opts.on_tail("-h", "--help") { abort usage }
+end.parse!
+
+# We require a template and data file to be specified
+# Abort if either not present
+template = File.expand_path(ARGV.pop)
+data = File.expand_path(ARGV.pop)
+abort usage unless data and template and File.file?(data) and File.file?(template)
+
+# Configure Liquid
+basedir = File.dirname(template)
+Liquid::Template.file_system = \
+    Liquid::LocalFileSystem.new(basedir, pattern="%s.md".freeze)
+
+# Load data, and template
+data = YAML.load(IO.read(data))
+template = Liquid::Template.parse(IO.read(template))
+
+puts template.render(data)
