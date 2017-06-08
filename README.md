@@ -1,6 +1,6 @@
 ## Liquidize
 
-A command-line version of [the Liquid template language](https://shopify.github.io/liquid/).
+Command-line rendering of [Liquid templates](https://shopify.github.io/liquid/).
 
 ### Installation
 
